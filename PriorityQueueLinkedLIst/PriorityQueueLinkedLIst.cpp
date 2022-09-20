@@ -1,51 +1,50 @@
 #include "Node.h"
 
+
 using namespace std;
 
 template <typename T>
  Node<T>*PQLL<T>::NewNode(size_t Data,int Priority)
 {
     Node<T>* TempNode = new Node<T>(Data,Priority);
+    TempNode->Next = nullptr;
+    TempNode->Previous = nullptr;
+    TempNode->DATA = Data;
+    TempNode->Priority = Priority;
+    if (Head == nullptr)
+    {
+        Head = Tail = TempNode;
+    }
+    else
+    {
+        TempNode->Previous = Tail;
+        Tail = Tail->Next= TempNode;
+    }
+    size++;
     return TempNode;
 }
 
 template <typename T>
 void PQLL<T>::Push(size_t Data,int Priority)
-{
-    Node<T>* NewNode = NewNode(4,1);
-    if (Head == nullptr)
-    {
-        Head = NewNode;
-        return;
-    }
-    Node<T>* TempNode = Head;
-    Node<T>* Prev = nullptr;
+{   Node<T>*NewNodeTemp = NewNode(Data,Priority);
 
-    while (TempNode != nullptr && TempNode->Priority > Priority)
+    if (Head->Priority > Priority)
     {
-        Prev = TempNode;
-        TempNode = TempNode->Next;
-    }
-
-    if (TempNode == nullptr)
-    {
-        Prev->Next = NewNode;
+        NewNodeTemp->Next = Head;
+        Head = NewNodeTemp;
     }
     else
     {
-        if (Prev == nullptr)
+        while (Head->Next != nullptr && Head->Next->Priority < Priority)
         {
-            NewNode->Next = Head;
-            Head = NewNode;
+            Head = Head->Next;
         }
-        else
-        {
-            NewNode->Next = TempNode;
-            Prev->Next = NewNode;
-        }
+        NewNodeTemp->Next = Head->Next;
+        Head->Next = NewNodeTemp;
     }
-    
 }
+    
+
 template <class T>
 void PQLL<T>::PrintOut()
 {
@@ -67,9 +66,10 @@ int main(int argc, char* argv[])
     IntQue.Push(5,2);
     IntQue.Push(6,3);
     IntQue.Push(7,0);
-    
+   
     IntQue.PrintOut();
-
+    
+    
     
     return 0;
 }
